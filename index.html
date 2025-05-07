@@ -5,16 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asivery's projects</title>
     <link rel="icon" href="favicon.ico">
-    <style>
-        body {
-            background-color: #242424;
-            font-family: monospace;
-            color: white;
-        }
-        a {
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
     <script>
         window.onload = () => document.querySelectorAll('#date').forEach(e => e.textContent = new Date().getFullYear());
     </script>
@@ -26,6 +17,10 @@
         <li><a href="https://github.com/asivery/ElectronWMD">ElectronWMD</a> - An electron-encapsulated version of Web MiniDisc Pro - it offers better support for HiMD and Network Walkman devices</li>
         <li><a href="/simple-fat-explorer">Simple FAT Explorer</a> - A simple webapp for exploring FAT12 / FAT16 / FAT32 disk images on a lower-level than most tools offer</li>
     </ul>
+    <hr>
+    <h2>Other projects / writeups:</h2>
+    <ul>
+        <li><a href="NW-HD1">Recreating the Sony NW-HD1 ver 2.000 firmware update file</a></li>
     <hr>
     <footer>
         © asivery, <span id="date"></span>

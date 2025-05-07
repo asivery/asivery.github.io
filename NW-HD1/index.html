@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sony NW-HD1 Firmware File Format</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            width: 63%;
+            margin: auto;
+        }
+
+        .decomp {
+            width: 70%;
+            margin: auto;
+            margin-top: 3em;
+        }
+
+        .imagedesc {
+            display: block;
+            margin-bottom: 3em;
+            text-align: center;
+        }
+
+        pre {
+            background-color: #141414;
+            padding: 2em;
+            display: block;
+            max-width: max-content;
+            margin: 3em auto;
+            overflow: auto;
+        }
+
+        img {
+            max-height: 1000px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <h2>Reverse engineering the NW-HD1 firmware update format</h2>
+
+    <h3>Differences between ver. 2.000 and previous versions</h3>
+    <p>
+        Many people would like to update their NW-HD1 to ver 2.000, because, unlinke previous versions, it supports the playback of MP3 files.
+    </p>
+    <h3>The process</h3>
+    <p>
+        A few months ago, two members of the Minidisc Wiki Discord server (@___L___ and @richardhopton)
+        have successfully managed to transfer the flash image from one Sony NW-HD1 (with ver. 2.000) with the use of the debug UART console and external programmers.
+    </p>
+    <p>
+        During that process, it became clear that the Sony Firmware supports updating the flash on-device. Some <a href="assets/Technical Bulletin_Firmware Upgrading Procedure-1.pdf">internal documents</a> even describe the process.
+        However, the files mentioned there are missing.
+    </p>
+    <p>
+        Fortunately, since the flash ROM containing version 2.000 got dumped, it should be possible to recreate the aforementioned <code>ZEP01.BIN</code> file.
+        Knowing that, I decided to try and reverse engineer the HD1's firmware in Ghidra to try and find the update routines, which was surprisingly simple.
+        <img class="img-contained block decomp" src="assets/routine.png" alt="Firmware update main routine">
+        <span class="imagedesc">Main firmware update routine</span>    
+    </p>
+    <p>
+        Before flashing the image file, the firmware reads the unencrypted header, and runs several checks:
+        <ul>
+            <li>Basic file size check / whether the file exists</li>
+            <li>Comparing the file size declared in the file with its actual size</li>
+            <li>Comparing the (inverted) CRC32 of the whole file excluding the final four bytes, with the final four bytes</li>
+        </ul>
+    </p>
+    <p>
+        After that check completes, the code decrypts the payload, and parses its header.
+        The metadata header consists of 6 entries, each one 16 bytes long, with the format:
+        <pre>
+<span style='color:#6d8000; font-weight:bold; '>struct</span> UpdateHeaderEntry <span style='color:#406080; '>{</span>
+    <span style='color:#6d8000; font-weight:bold; '>char</span> name<span style='color:#308080; '>[</span><span style='color:#008c00; '>4</span><span style='color:#308080; '>]</span><span style='color:#406080; '>;</span>
+    <span style='color:#6d8000; font-weight:bold; '>uint32_t</span> dataSectionOffset<span style='color:#406080; '>;</span>
+    <span style='color:#6d8000; font-weight:bold; '>uint32_t</span> length<span style='color:#406080; '>;</span>
+    <span style='color:#6d8000; font-weight:bold; '>uint32_t</span> startOfSectionInROM<span style='color:#406080; '>;</span> <span style='color:#595979; '>// Unused in the HD1 / HD5, used in A1000</span>
+<span style='color:#406080; '>};</span></pre>
+    </p>
+    <p>
+        The firmware then checks if the names of sections in the payload match its internal names.
+        Locating that function makes it trivial to get the information about where each section is located, and what it's called:
+        <ul>
+            <li>HARU - located at 0x0, max length 0x4000 bytes</li>
+            <li>NATU - located at 0x100000, max length 0x80000 bytes</li>
+            <li>FUYU - located at 0xc0000, max length 0x40000 bytes</li>
+        </ul>
+        <img class="img-contained block decomp" src="assets/sections.png">
+        <span class="imagedesc">
+            Section loading routine:
+            <span style="color: blue">length checks</span>,
+            <span style="color: green">name checks</span>,
+            <span style="color: red">offset from start of flash</span>
+        </span>
+    </p>
+    <p>
+        Since the raw FLASH is usually mapped at address 0x01000000, after adding the offsets above and verifying the contents, I was able to confirm that the ROM sections are indeed located at the correct spots.
+        I was able to cross-reference them with the sections provided by Sony in the NW-HD5 update file, which is publicly avaliable.
+        After all that, I was able to simply recreate the original <code>ZEP01.BIN</code> by carving the sections from the appropriate addresses of the image.
+    </p>
+    <p>
+        That resulted in a payload as follows:
+        <img src="assets/payload.png" style="width: 100%;">
+        <span>(Imhex format available <a href="assets/payload.pat">here</a>)</span>
+    </p>
+    <p>
+        All that was left to do was to encrypt it, and encapsulate it in the update file container:
+        <pre>
+<span style='color:#6d8000; font-weight:bold; '>struct</span> UpdateFile <span style='color:#406080; '>{</span>
+    <span style='color:#595979; '>// Header:</span>
+    <span style='color:#6d8000; font-weight:bold; '>char</span> fileId<span style='color:#308080; '>[</span><span style='color:#008c00; '>8</span><span style='color:#308080; '>]</span><span style='color:#406080; '>;</span> <span style='color:#595979; '>// The HD1 does not check the file ID. I just put "ZEP01BIN" there</span>
+    <span style='color:#6d8000; font-weight:bold; '>uint32_t</span> size<span style='color:#406080; '>;</span> <span style='color:#595979; '>// Size of the payload + 16 bytes for the header</span>
+    <span style='color:#6d8000; font-weight:bold; '>uint32_t</span> magic<span style='color:#406080; '>;</span> <span style='color:#595979; '>// The bytes 09 08 0b 0a</span>
+
+    <span style='color:#6d8000; font-weight:bold; '>uint8_t</span> payload<span style='color:#308080; '>[</span><span style='color:#308080; '>]</span><span style='color:#406080; '>;</span>
+
+    <span style='color:#6d8000; font-weight:bold; '>uint32_t</span> crc<span style='color:#406080; '>;</span> <span style='color:#595979; '>// CRC of the payload concatenated to the header</span>
+<span style='color:#406080; '>}</span><span style='color:#406080; '>;</span></pre>
+        After that, I was left with the <a href="assets/ZEP01.BIN">recreated ZEP01.BIN</a> update file.
+        <h2>Enjoy!</h2>
+        <h3>To flash:</h3>
+        <ol>
+            <li>Copy the ZEP01.bin file to the newly created "FWUPDATED" directory on the HD1</li>
+            <li>Turn the HD1 on</li>
+            <li>Open the menu</li>
+            <li>Switch the hold switch on</li>
+            <li>Enter the following button sequence with the MODE button pressed down: Right Right Left Left Right Left Right Left Play Play</li>
+            <li>After entering that, you should be presented with the TEST MODE menu, with "FWUpdate" highlited. Press play to confirm</li>
+            <li>Confirm wanting to update your firwmare</li>
+            <li>Wait for the device to reboot. It should take approximately 30 seconds.</li>
+        </ol>
+        <p>I'm not responsible for any bricked devices. This process might cause your device to become bricked! Try it at your own risk!</p>
+    </p>
+</body>
+</html>
