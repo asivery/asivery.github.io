@@ -1,0 +1,59 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-image: url('circuit.gif');
+    background-repeat: repeat;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h2 {
+    text-align: center;
+}
+
+#main {
+    width: 800px;
+    margin: 4px auto 0;
+    background-color: #afb2b5;
+    padding: 10px;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
+.link {
+    padding: 0 16px;
+}
+
+.join-now {
+    display: block;
+    text-align: center;
+    width: 220px;
+    font-size: 24px;
+    font-style: italic;
+    border-style: solid;
+    border-color: #96989b;
+    padding: 16px 4px;
+    border-width: 4px 0;
+    margin: 8px auto;
+}
+
+#buttons-bottom {
+    width: 800px;
+    margin: 8px auto 0;
+    text-align: center;
+}
+
+.disable {
+    user-select: none;
+    color: gray;
+    cursor: default;
+}
+
+.center {
+    margin: auto; display: block; text-align: center;
+}

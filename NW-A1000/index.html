@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>Sony NW-A1000 patcher</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.sheetjs.com/crc-32-latest/package/crc32.js"></script>
+        <script src="patch.js"></script>
+    </head>
+    <body>
+        <div id="main">
+            <h2>Patch your Network Walkman!</h2>
+            <p>This site offers you the ability to patch your Sony NW-A1000's firmware to work with standard SSD1327 displays!</p>
+            <div class="center">
+                <img src="walkman.gif">
+                <img src="spinpcb.gif">
+            </div>
+            <p>To connect a normal SSD1327 display, you need a custom flex PCB. Either make it yourself from the files published <a href="https://github.com/asivery/nw-a1000-oled">here</a>, or buy a new screen from me directly. (Not yet available)
+            </p>
+            <p>Please select the <b>NW_A1000.UPG</b> file to patch</p>
+            <input type="file" id="source" class="center">
+            <a class="join-now disable" id="dl">&gt;&gt; DOWNLOAD! &lt;&lt;</a>
+        </div>
+        <div id="buttons-bottom">
+            <a class="no-underline" href="https://cyber.dabamos.de/88x31/">
+                <img src="buttons/88x31.gif" alt="88x31 button" width="88" height="31">
+            </a>
+            <img src="buttons/gnu-linux.gif" alt="88x31 button" width="88" height="31">
+            <img src="buttons/res.gif" alt="88x31 button" width="88" height="31">
+            <a class="no-underline" href="https://ko-fi.com/asivery">
+                <img src="buttons/project-support.gif" alt="88x31 button" width="88" height="31">
+            </a>
+        </div>
+        <script>
+            const patchLines = window.PATCH.trim().split("\n");
+            document.getElementById('source').onchange = async (e) => {
+                const file = e.target.files[0];
+                const contents = new Uint8Array(await file.arrayBuffer());
+                const checksum = CRC32.buf(contents, 0xFFFFFFFF) >>> 0;
+                if(checksum.toString() !== patchLines[0]) {
+                    window.alert("Incorrect file provided!");
+                    e.target.value = '';
+                    return;
+                }
+                for(let i = 1; i < patchLines.length - 1; i++) {
+                    const [sOffset, sValue] = patchLines[i].split("|");
+                    const offset = parseInt(sOffset, 16);
+                    const value = parseInt(sValue, 16);
+                    contents[offset] = value;
+                }
+                const checksumAfter = CRC32.buf(contents, 0xFFFFFFFF) >>> 0;
+                if(checksumAfter.toString() !== patchLines[patchLines.length - 1]) {
+                    window.alert("Patching failed!");
+                    e.target.value = '';
+                    return;
+                }
+                const dataURL = URL.createObjectURL(new Blob([contents], { type: 'application/octet-stream' }));
+                const a = document.getElementById('dl');
+                a.href = dataURL;
+                a.download = file.name;
+                a.classList.remove('disable');
+            }
+        </script>
+    </body>
+</html>
