@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MZ-RH10 display replacement installation manual</title>
+    <style>
+        body {
+            max-width: 48rem;
+            margin: auto;
+            font-family: monospace;
+            padding: 10px;
+            background-color: #242424;
+            font-family: monospace;
+            color: white;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            text-decoration: underline;
+            font-size: 1.5em;
+        }
+
+        .warning {
+            color: #e2b900;
+            font-weight: bold;
+        }
+
+        .extreme {
+            color: red;
+        }
+
+        .note, a[href] {
+            color: rgb(7, 85, 202);
+        }
+    </style>
+</head>
+<body>
+    <h1>MZ-RH10 display replacement installation manual</h1>
+
+    <p>
+        This manual describes the steps required to replace the burnt-out OLED display in an MZ-RH10 MiniDisc recorder with a <a href="https://lectronz.com/rh10-replacement-display">brand new module</a> I designed.
+    </p>
+
+    <h2>Required parts / tools</h2>
+    <p>
+        </p><ol>
+            <li>Damaged MZ-RH10</li>
+            <li>Replacement screen module</li>
+            <li>Soldering iron</li>
+            <li>Scalpel</li>
+            <li>Flux</li>
+            <li>Solder</li>
+            <li>Capton tape</li>
+            <li>Isopropyl alcohol</li>
+        </ol>
+    <p></p>
+    <h2>Disclaimers</h2>
+    <p class="warning">
+        The replacement module is a flexible PCB. If bent incorrectly, it might crack and stop working. Be careful!
+        <span class="extreme">Do not bend the part containing the integrated circuit.</span>
+    </p>
+    <p class="warning">
+        If you're not sure about some step, or if you encountered some 
+problem that's not described in this guide, please contact me on Discord
+ (<span class="note">@asivery</span>), or via E-Mail (<span class="note">asivery at protonmail dot com</span>).
+    </p>
+    <p class="note">
+        If you wish to contribute anything to this guide, please message me. Thank you in advance :)
+    </p>
+    <p class="warning extreme">
+        Even though I've tried my best to descibe all the steps as best 
+as I could, I can't be held liable for any damages done to either the 
+MZ-RH10 itself, or any other equipment used during the installation.
+        Only proceed if you're comfortable with taking apart small 
+electronics, and know how to solder. Otherwise, I strongly recommend 
+seeking a local electonics proffessional, who would be willing to help 
+with the installation.
+    </p>
+    <h2>Installation steps</h2>
+    <h3>0. Remove the disc and battery</h3>
+    <p>
+        To make the replacement process as simple as possible, start off
+ by removing the disc and the gumstick battery, as well as the sidecar 
+(if present).
+    </p>
+    <h3>1. Taking off the main chassis</h3>
+    <div>
+        <p>
+            To start off, open the battery compartment, and remove the 
+battery door - gently lift the pin and slide the door off.
+        </p>
+        <p class="warning">
+            The plastics the MZ-RH10 is made out of have deteriorated 
+since the device was manufactured, and therefore became brittle. It's 
+very easy to end up with a cracked chassis. <strong>Be careful!</strong>
+        </p>
+        <p>
+            <img src="photos/02.JPG">
+        </p>
+        <p>
+            Then, remove the 5 screws holding the main chassis in place.
+            </p><ul>
+                <li>Two are hidden in the battery compartment</li>
+                <li>Two are on the side of the unit, next to the USB and barrel jack ports</li>
+                <li>One is hidden behind the disc eject button</li>
+            </ul>
+        <p></p>
+        <p>
+            <img src="photos/03.JPG" alt="">
+        </p>
+        <p>
+            Slide the DC IN / USB door so that it covers the DC IN part - this will make it easier to pry the case open later.
+        </p>
+        <p>
+            <img src="photos/04.JPG" alt="">
+        </p>
+        <p>
+            Slide two picks into the chassis:
+            </p><ul>
+                <li>First one below the battery connector</li>
+                <li>Second one right next to the USB connector</li>
+            </ul>
+        <p></p>
+        <p>
+            <img src="photos/05.JPG" alt="">
+            <img src="photos/06.JPG" alt="">
+        </p>
+        <p>
+            Very gently try to lift the device out of its case with the 
+pick in the battery compartment. If the second pick is inserted 
+correctly, you should be able to effortlessly lift the whole mechanism 
+out.
+        </p>
+        <p>
+            <strong>Do not force anything open at this point</strong>
+        </p>
+        <p class="warning">The second pick is inserted very close to the magnetic head ribbon. You might rip it, if you're not careful.</p>
+        <p>If you followed the steps correctly, you should end up with the chassis removed.</p>
+        <p>
+            <img src="photos/07.JPG" alt="">
+        </p>
+
+        <p class="note">I highly recommend removing one of the clear 
+pieces of plastic glued to the side of the mechanism. Unless removed, it
+ can squish and tear the write head ribbon during reassembly.</p>
+        <p>
+            <img src="photos/plastic.JPG" alt="">
+            <img src="photos/plastic_removed.JPG" alt="">
+        </p>
+    </div>
+    <div>
+        <h3>2. Removing the lid board</h3>
+        <p>
+            After the machine is out of its chassis, it's time to remove the lid.
+        </p>
+        <p>
+            Start by disconnecting the lid ribbon cable - unlatch it 
+from its connector by sliding edges of the brown part as pointed out by 
+the arrows. This should make it possible to simply slide out the ribbon 
+cable, without the use of any force.
+        </p>
+        <p>
+            <img src="photos/08.JPG" alt="">
+        </p>
+        <p>
+            Remove the lid spring - open the disc compartment, and 
+unlatch the spring from the brass pin. Close the disc compartment 
+afterwards.
+        </p>
+        <p>
+            <img src="photos/09.JPG" alt="">
+        </p>
+        <p>
+            Unscrew the lid
+        </p>
+        <p class="warning">The screwes here are a different length. Keep track of them!</p>
+        <p>
+            <img src="photos/10.JPG" alt="">
+        </p>
+        <p>
+            Open the disc compartment, then carefully unlatch the lid 
+from the rest of the mechanism. It should come off without requiring any
+ force.
+        </p>
+        <!--<p>
+            <img src="photos/11.JPG" alt="">
+        </p>-->
+        <p class="note">
+            When reassembling, make sure to latch these components correctly!
+        </p>
+        <p>
+            <img src="photos/09a.JPG" alt="">
+        </p>
+        <h3>2. Removing the front of the lid</h3>
+        <p>
+            Remove the four screws holding the midframe to the front of the lid.
+        </p>
+        <p>
+            <img src="photos/12.JPG" alt="">
+        </p>
+        <p>
+            Insert a pick between the lid PCB and the front of the lid.
+        </p>
+        <p class="warning">
+            Do not insert it between the PCB and the midframe - you might end up cracking the PCB that way!
+        </p>
+        <p>
+            <img src="photos/13.JPG" alt="">
+        </p>
+        <p>Slide another pick from the top, between the old OLED and the
+ front of the lid. The screen is partially glued, and needs to be pried 
+out.</p>
+        <p>
+            <img src="photos/14.JPG" alt="">
+            <img src="photos/15.JPG" alt="">
+        </p>
+    </div>
+    <div>
+        <h3>3. Removing the dead screen</h3>
+        <p>Remove the tape covering the OLED connector</p>
+        <p>
+            <img src="photos/16.JPG" alt="">
+        </p>
+        <p>Slice off the pins off of the old OLED's ribbon</p>
+        <p class="note">Alternatively, you can desolder this ribbon. I, 
+however, found it easier to simply slice the pins off, then clean them 
+up afterwards.</p>
+        <p>
+            <img src="photos/17.JPG" alt="">
+        </p>
+        <p>Slice the adhesive holding the old ribbon in place as well.</p>
+        <p>
+            <img src="photos/18.JPG" alt="">
+        </p>
+        <p>Afterwards, lift the ribbon up</p>
+        <p>
+            <img src="photos/19.JPG" alt="">
+        </p>
+        <p>The OLED is also adhered using a small strip of tape. Gently lift it up and out from the bottom.</p>
+        <p>
+            <img src="photos/20.JPG" alt="">
+        </p>
+        <p>Clean up the solder pads with new solder</p>
+        <p class="note">Don't forget to add flux! It will help the solder flow.</p>
+        <p>
+            <img src="photos/21.JPG" alt="">
+        </p>
+    </div>
+    <div>
+        <h3>4. Installing the new OLED module</h3>
+        <p>Remove the adhesive backing from the new OLED, then carefully position it in the RH10's midframe.</p>
+        <p class="warning">Make sure the pins touching the RH10's board are straight!</p>
+        <p class="warning">Double check the alignment! Make sure 
+absolutely everything is straight at this point. It will be very hard to
+ remove the OLED module after soldering it.</p>
+        <p class="warning">The OLED module has only 30 pins, whereas the old panel has 31 - this is normal. The 31st pin should not be soldered.</p>
+        <p>Example of bad alignment</p>
+        <p>
+            <img src="photos/bad_alignment.JPG" alt="">
+        </p>
+        <p>Example of good alignment</p>
+        <p>
+            <img src="photos/good_alignment.JPG">
+        </p>
+        <p>
+            After you're happy with the alingment, solder the screen down
+        </p>
+        <p class="note">Using a fair bit of flux will help immensely</p>
+        <p>At this point, I recommend testing the newly soldered screen -
+ connect the lid board to the main board, without putting the lid 
+together.</p>
+        <p class="warning">Before plugging the battery in, make sure you have no shorts on the display connector. <span class="extreme">Some
+ pins on this connector have a high (+12V) potential on them. Bridging 
+these pins with any others will cause permanent damage to both the 
+replacement module and the MZ-RH10 itself.</span></p>
+        <p> After latching the lid midframe back and gently pressing the
+ whole disc compartment down (nothing will hold it in place without the 
+actual lid), you should see the correct data on the screen.</p>
+        <p>
+            <img src="photos/23.JPG" alt="">
+        </p>
+        <p class="warning">If at this point, you can only see garbage 
+data on the screen (or sometimes nothing at all), reflow all the newly 
+soldered pins. The MZ-RH10 uses a parallel bus for communication. All 
+pins have to be correctly attached, or else it will not work.</p>
+        <p>Once you're sure the display works correctly, clean all the 
+flux with isopropyl alcohol, then insulate the board with capton tape.</p>
+        <p><img src="photos/24.JPG" alt=""></p>
+        <p>Finally, gently bend the part of the module that's sticking out onto itself, as marked on the photo below</p>
+        <p>
+            <img src="photos/25.JPG" alt="">
+        </p>
+    </div>
+    <div>
+        <h3>That's it!</h3>
+        <p>To put your MZ-RH10 back together, follow these instructions 
+in the reverse order. Be sure to never use excessive force! These 
+components should all slot back in with perfect ease.</p>
+        <p>
+            <img src="photos/finish.JPG" alt="">
+        </p>
+    </div>
+    <hr>
+    <footer>
+        © asivery, <span id="date">2025</span>
+    </footer>
+</body></html>
