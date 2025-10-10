@@ -16,7 +16,7 @@
             </div>
             <p>To connect a normal SSD1327 display, you need a custom flex PCB. Either make it yourself from the files published <a href="https://github.com/asivery/nw-a1000-oled">here</a>, or <a href="https://lectronz.com/products/a1000-oled-module">buy a new screen from me directly.</a>
             </p>
-            <p>Please select the <b>NW_A1000.UPG</b> file to patch</p>
+            <p>Please select the <b>NW_A1000.UPG</b> or <b>NW_A1200.UPG (UNTESTED!)</b> file to patch</p>
             <input type="file" id="source" class="center">
             <a class="join-now disable" id="dl">&gt;&gt; DOWNLOAD! &lt;&lt;</a>
         </div>
@@ -36,19 +36,25 @@
                 const file = e.target.files[0];
                 const contents = new Uint8Array(await file.arrayBuffer());
                 const checksum = CRC32.buf(contents, 0xFFFFFFFF) >>> 0;
-                if(checksum.toString() !== patchLines[0]) {
+                console.log(`File checksum is ${checksum}`);
+                let i = 0;
+                while(i < patchLines.length && !patchLines[i].startsWith(`>${checksum}`)) {
+                    ++i;
+                }
+                if(i === patchLines.length) {
                     window.alert("Incorrect file provided!");
                     e.target.value = '';
                     return;
                 }
-                for(let i = 1; i < patchLines.length - 1; i++) {
-                    const [sOffset, sValue] = patchLines[i].split("|");
+                ++i;
+                while(i < patchLines.length && !patchLines[i].startsWith('<')) {
+                    const [sOffset, sValue] = patchLines[i++].split("|");
                     const offset = parseInt(sOffset, 16);
                     const value = parseInt(sValue, 16);
                     contents[offset] = value;
                 }
                 const checksumAfter = CRC32.buf(contents, 0xFFFFFFFF) >>> 0;
-                if(checksumAfter.toString() !== patchLines[patchLines.length - 1]) {
+                if(patchLines[i] != `<${checksumAfter}`) {
                     window.alert("Patching failed!");
                     e.target.value = '';
                     return;
