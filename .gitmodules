@@ -1,0 +1,3 @@
+[submodule "johnny"]
+	path = johnny
+	url = https://github.com/asivery/johnny.git
